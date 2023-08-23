@@ -1,19 +1,22 @@
 {
-  "parserOptions": {
-    "sourceType": "module"
-  },
-  "env": {
-    "es6": true,
-    "node": true
-  },
-  "rules": {
-    "no-unused-vars": [
-      "error",
-      {
-        // Ignore arguments starting with _
-        "argsIgnorePattern": "^_"
-      }
-    ]
-  },
-  "extends": "eslint:recommended"
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2020
+    },
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "rules": {
+        "no-unused-vars": [
+            "error",
+            {
+                // Ignore arguments starting with _
+                "argsIgnorePattern": "^_"
+            },
+            "warn",
+            { "varsIgnorePattern": "VARIABLE_NAME" }
+        ]
+    },
+    "extends": "eslint:recommended"
 }

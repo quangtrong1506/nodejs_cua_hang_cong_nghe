@@ -1,7 +1,7 @@
 import { parserJWTToken, responseErrors } from '../../Common/helper.mjs';
 import UserRepository from '../../Repositories/UserRepository.mjs';
 
-export const authMiddleware = async (req, res, next) => {
+export const adminAuthMiddleware = async (req, res, next) => {
     const responseToken = parserJWTToken(req.headers.authorization);
     if (!responseToken.success) {
         return responseErrors(res, 401, responseToken.errors ?? '');

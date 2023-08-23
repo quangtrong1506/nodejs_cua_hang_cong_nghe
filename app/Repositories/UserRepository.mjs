@@ -1,9 +1,8 @@
-import BaseRepository from "./BaseRepository.mjs";
-import User from "../Models/User.js";
-import {USERS} from "../../config/common.mjs";
+import BaseRepository from './BaseRepository.mjs';
+import User from '../Models/User.mjs';
+import { USERS } from '../../config/common.mjs';
 
-class UserRepository extends BaseRepository
-{
+class UserRepository extends BaseRepository {
     constructor() {
         super(User);
     }
@@ -12,8 +11,8 @@ class UserRepository extends BaseRepository
         return await this.getModel().findOne({
             phone,
             is_confirm_account: USERS.is_confirm_account.true,
-            deleted_at: null
-        })
+            deleted_at: null,
+        });
     }
 }
 

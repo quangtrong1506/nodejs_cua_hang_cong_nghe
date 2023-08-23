@@ -1,27 +1,24 @@
 import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
 
-const commentSchema = new mongoose.Schema(
+const categorySchema = new mongoose.Schema(
     {
-        user_id: {
-            type: ObjectId,
-            required: true,
-        },
-        content: {
+        name: {
             type: String,
-            required: true,
+            required: [true, 'Tên danh mục không được để trống'],
         },
-        rate: {
-            type: Number,
-            default: 5,
+        slug: {
+            type: String,
+            require: true,
         },
         created_at: {
             type: Date,
             required: false,
+            timestamps: true,
         },
         updated_at: {
             type: Date,
             required: false,
+            timestamps: true,
         },
     },
     {
@@ -31,4 +28,4 @@ const commentSchema = new mongoose.Schema(
         },
     }
 );
-export default mongoose.model('comments', commentSchema);
+export default mongoose.model('categories', categorySchema);
