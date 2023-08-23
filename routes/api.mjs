@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router } from 'express';
 
 // Controllers
 import UserController from '../app/Http/Controllers/UserController.mjs';
@@ -33,9 +33,12 @@ import {
 } from '../app/Http/Requests/CategoryRequest.mjs';
 import ProductController from '../app/Http/Controllers/ProductController.mjs';
 import { validateAddProduct } from '../app/Http/Requests/ProductRequest.mjs';
+import IndexController from '../app/Http/Controllers/IndexController.mjs';
 
 const router = express.Router();
 
+// all
+router.all('/', IndexController.index);
 // Auth
 router.post('/auth/login', validateUserLogin, AuthController.login);
 router.post(
