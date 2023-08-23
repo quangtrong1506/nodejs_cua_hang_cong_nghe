@@ -4,15 +4,15 @@ import './loadEnvironment.mjs';
 import 'express-async-errors';
 import api from './routes/api.mjs';
 import bodyParser from 'body-parser';
-import { logging } from './config/logging.mjs';
-import winston from 'winston';
+// import { logging } from './config/logging.mjs';
+// import winston from 'winston';
 import db from './config/database.mjs';
 import fileupload from 'express-fileupload';
 
-logging();
+// logging();
 // connect db
-db.run()
-    .then(() => console.log('Connected'))
+db.connect()
+    .then(() => console.log('Connected!'))
     .catch((e) => console.log(e));
 const PORT = process.env.PORT || 5050;
 const app = express();
@@ -28,8 +28,8 @@ app.use('/', api);
 app.set('view engine', 'ejs');
 // Global error handling
 app.use((err, _req, res) => {
-    winston.loggers.get('system').error('ERROR', err);
-    res.status(500).send(err);
+    // winston.loggers.get('system').error('ERROR', err);
+    // res.status(500).send(err);
 });
 
 // start the Express server

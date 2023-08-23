@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import { MongoClient, ServerApiVersion } from 'mongodb';
-const uri =
-    'mongodb+srv://quangtrong1506:Trong1506@admin.g1cwb0a.mongodb.net/?retryWrites=true&w=majority';
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const uri = `mongodb+srv://quangtrong1506:Trong1506@${process.env.DATABASE}.g1cwb0a.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -22,7 +20,7 @@ const db = {
             // Connect the client to the server	(optional starting in v4.7)
             await client.connect();
             // Send a ping to confirm a successful connection
-            await client.db('admin').command({ ping: 1 });
+            await client.db(process.env.DATABASE).command({ ping: 1 });
             console.log(
                 'Pinged your deployment. You successfully connected to MongoDB!'
             );
