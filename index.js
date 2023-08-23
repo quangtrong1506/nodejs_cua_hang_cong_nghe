@@ -25,7 +25,6 @@ app.use(fileupload());
 app.use('/', api);
 
 // Set view engine
-app.set('view engine', 'ejs');
 // Global error handling
 app.use((err, _req, res) => {
     // winston.loggers.get('system').error('ERROR', err);
