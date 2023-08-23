@@ -1,54 +1,57 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "format": "prettier --single-quote --check .",
-    "prepare": "cd ../ && husky install server/.husky",
-    "dev": "nodemon --experimental-modules index.js"
-  },
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "bull": "^4.10.4",
-    "cors": "^2.8.5",
-    "crypto-js": "^4.1.1",
-    "dotenv": "^8.2.0",
-    "ejs": "^3.1.9",
-    "express": "^4.18.2",
-    "express-async-errors": "^3.1.1",
-    "express-fileupload": "^1.4.0",
-    "express-validator": "^7.0.0",
-    "migrate": "^1.8.0",
-    "migrate-mongo": "^9.0.0",
-    "moment": "^2.29.4",
-    "mongodb": "^4.17.0",
-    "mongoose": "^7.0.3",
-    "mongoose-paginate": "^5.0.3",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.1",
-    "winston": "^3.8.2",
-    "xlsx": "^0.18.5"
-  },
-  "devDependencies": {
-    "eslint": "^8.0.0",
-    "husky": "^7.0.2",
-    "lint-staged": "^11.2.3",
-    "nodemon": "^2.0.12",
-    "prettier": "^2.4.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
+    "name": "server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module",
+    "engines": {
+        "node": "16.x"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint .",
+        "format": "prettier --single-quote --check .",
+        "prepare": "cd ../ && husky install server/.husky",
+        "dev": "nodemon --experimental-modules index.js"
+    },
+    "dependencies": {
+        "body-parser": "^1.20.2",
+        "bull": "^4.10.4",
+        "cors": "^2.8.5",
+        "crypto-js": "^4.1.1",
+        "dotenv": "^8.2.0",
+        "ejs": "^3.1.9",
+        "express": "^4.18.2",
+        "express-async-errors": "^3.1.1",
+        "express-fileupload": "^1.4.0",
+        "express-validator": "^7.0.0",
+        "migrate": "^1.8.0",
+        "migrate-mongo": "^9.0.0",
+        "moment": "^2.29.4",
+        "mongodb": "^4.17.0",
+        "mongoose": "^7.0.3",
+        "mongoose-paginate": "^5.0.3",
+        "multer": "^1.4.5-lts.1",
+        "nodemailer": "^6.9.1",
+        "winston": "^3.8.2",
+        "xlsx": "^0.18.5"
+    },
+    "devDependencies": {
+        "eslint": "^8.0.0",
+        "husky": "^7.0.2",
+        "lint-staged": "^11.2.3",
+        "nodemon": "^2.0.12",
+        "prettier": "^2.4.1"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.js": [
+            "prettier --single-quote --write",
+            "eslint --fix"
+        ]
     }
-  },
-  "lint-staged": {
-    "*.js": [
-      "prettier --single-quote --write",
-      "eslint --fix"
-    ]
-  }
 }
