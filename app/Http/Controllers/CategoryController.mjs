@@ -5,6 +5,7 @@ import {
     stringToSlug,
 } from '../../Common/helper.mjs';
 import CategoryRepository from '../../Repositories/CategoryRepository.mjs';
+import ProductRepository from '../../Repositories/ProductRepository.mjs';
 
 class CategoryController extends BaseController {
     async index(_req, res) {
@@ -57,15 +58,25 @@ class CategoryController extends BaseController {
         }
     }
     async special(_req, res) {
-        const data = await CategoryRepository.findBy({});
-        const result = [];
-        data.forEach((element) =>
-            result.push({
-                name: element.name,
-                thumbnail: null,
-            })
-        );
-        responseSuccess(res, result);
+        try {
+            const data = await CategoryRepository.findBy({});
+            const result = [];
+            const forLoop = async (_) => {
+                for (let index = 0; index < data.length; index++) {
+                    const prod = await ProductRepository.findBy({
+                        category: data[index]._id.toString(),
+                    });
+                    result.push({
+                        name: data[index].name,
+                        thumbnail: prod[0]?.thumbnail || null,
+                    });
+                }
+                return responseSuccess(res, result);
+            };
+            forLoop();
+        } catch (error) {
+            responseErrors(res, 500, error.toString());
+        }
     }
 }
 

@@ -1,54 +1,47 @@
-import {PAGINATE_OPTIONS} from "../../config/common.mjs";
-class BaseRepository
-{
+import { PAGINATE_OPTIONS } from '../../config/common.mjs';
+class BaseRepository {
     model = null;
 
     constructor(model) {
-        this.setModel(model)
+        this.setModel(model);
     }
 
-    getModel()
-    {
+    getModel() {
         return this.model;
     }
 
-    setModel(model)
-    {
+    setModel(model) {
         this.model = model;
     }
 
-    store(data)
-    {
+    store(data) {
         return this.getModel().create(data);
     }
 
-    findBy(conditions = {}, sort = {})
-    {
-        return this.getModel().find({...conditions, deleted_at: null}).sort(sort);
+    findBy(conditions = {}, sort = {}) {
+        return this.getModel()
+            .find({ ...conditions, deleted_at: null })
+            .sort(sort);
     }
 
-    findById(id)
-    {
+    findById(id) {
         return this.getModel().findOne({
             _id: id,
-            deleted_at: null
+            deleted_at: null,
         });
     }
 
-    update(id, data)
-    {
+    update(id, data) {
         return this.getModel().findByIdAndUpdate(id, data);
     }
 
-    delete(id)
-    {
+    delete(id) {
         return this.getModel().findByIdAndUpdate(id, {
-            deleted_at: new Date()
+            deleted_at: new Date(),
         });
     }
 
-    paginate(conditions = {}, options = {})
-    {
+    paginate(conditions = {}, options = {}) {
         if (typeof options.sort !== 'object') {
             options.sort = PAGINATE_OPTIONS.sort;
         }
@@ -62,7 +55,10 @@ class BaseRepository
         }
         delete conditions.pagination;
 
-        return this.getModel().paginate({...conditions, deleted_at: null}, options);
+        return this.getModel().paginate(
+            { ...conditions, deleted_at: null },
+            options
+        );
     }
 }
 

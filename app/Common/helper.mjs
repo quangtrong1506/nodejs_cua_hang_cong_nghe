@@ -172,3 +172,22 @@ export const getID = (length) => {
     }
     return id;
 };
+export const getProductSortOption = (sort) => {
+    const option = {};
+    switch (sort) {
+        case 1:
+            option.price = 1;
+            break;
+        case 2:
+            option.price = -1;
+            break;
+        case 3:
+            option.title = 1;
+            break;
+        case 4:
+            option.title = -1;
+            break;
+        default:
+    }
+    return option;
+};

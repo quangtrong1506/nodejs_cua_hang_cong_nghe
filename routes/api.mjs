@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 
 // Controllers
-import UserController from '../app/Http/Controllers/UserController.mjs';
+// import UserController from '../app/Http/Controllers/UserController.mjs';
 import AuthController from '../app/Http/Controllers/AuthController.mjs';
 import ProfileController from '../app/Http/Controllers/ProfileController.mjs';
 
@@ -54,19 +54,19 @@ router.post(
 
 // Users
 // router.use(authMiddleware);
-router.get('/users', UserController.index);
-router.post('/users', validateStoreOrUpdateUser, UserController.store);
-router.get('/users/:userId', UserController.show);
-router.put('/users/:userId', validateStoreOrUpdateUser, UserController.update);
-router.delete('/users/:userId', UserController.destroy);
-router.post(
-    '/users/import',
-    importUserMiddleware.single('file'),
-    UserController.import
-);
-router.get('/users/import/newest', UserController.showImportNewest);
-router.get('/users/import/history', UserController.getImportHistory);
-router.post('/users/export', validateIndexUser, UserController.export);
+// router.get('/users', UserController.index);
+// router.post('/users', validateStoreOrUpdateUser, UserController.store);
+// router.get('/users/:userId', UserController.show);
+// router.put('/users/:userId', validateStoreOrUpdateUser, UserController.update);
+// router.delete('/users/:userId', UserController.destroy);
+// router.post(
+//     '/users/import',
+//     importUserMiddleware.single('file'),
+//     UserController.import
+// );
+// router.get('/users/import/newest', UserController.showImportNewest);
+// router.get('/users/import/history', UserController.getImportHistory);
+// router.post('/users/export', validateIndexUser, UserController.export);
 
 // Profile
 router.get('/profile', ProfileController.show);
@@ -105,6 +105,8 @@ router.get('/category/special', CategoryController.special);
 
 // product
 router.get('/products', ProductController.index);
+router.get('/products/:id', ProductController.show);
+
 router.post(
     '/products/add',
     // adminAuthMiddleware,
@@ -116,6 +118,11 @@ router.put(
     // adminAuthMiddleware,
     validateAddProduct,
     ProductController.update
+);
+router.delete(
+    '/products/:id',
+    // adminAuthMiddleware,
+    ProductController.destroy
 );
 
 export default router;
