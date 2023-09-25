@@ -17,7 +17,9 @@ class BaseRepository {
     store(data) {
         return this.getModel().create(data);
     }
-
+    findOne(conditions = {}, sort = {}) {
+        return this.getModel().findOne(conditions).sort(sort);
+    }
     findBy(conditions = {}, sort = {}) {
         return this.getModel()
             .find({ ...conditions, deleted_at: null })
@@ -36,11 +38,13 @@ class BaseRepository {
     }
 
     delete(id) {
-        return this.getModel().findByIdAndUpdate(id, {
+        return this.getModel().findByIdAndDelete(id, {
             deleted_at: new Date(),
         });
     }
-
+    count(options = {}) {
+        return this.getModel().count(options);
+    }
     paginate(conditions = {}, options = {}) {
         if (typeof options.sort !== 'object') {
             options.sort = PAGINATE_OPTIONS.sort;

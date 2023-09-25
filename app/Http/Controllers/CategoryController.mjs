@@ -36,10 +36,12 @@ class CategoryController extends BaseController {
             const cats = await CategoryRepository.findBy({
                 slug,
             });
-            await CategoryRepository.update(cats[0]._id, {
-                name: name,
-                slug: stringToSlug(name),
-            });
+            if (cats.length > 0)
+                await CategoryRepository.update(cats[0]._id, {
+                    name: name,
+                    slug: stringToSlug(name),
+                });
+            else return responseErrors(res, 404, 'Danh mục không tồn tại');
             responseSuccess(res);
         } catch (error) {
             return responseErrors(res, 500, 'Lỗi cập nhật danh mục');
@@ -51,10 +53,13 @@ class CategoryController extends BaseController {
             const cats = await CategoryRepository.findBy({
                 slug,
             });
+            if (cats.length == 0)
+                return responseErrors(res, 401, 'Danh mục không tồn tại');
+            console.log(cats);
             await CategoryRepository.delete(cats[0]._id);
             return responseSuccess(res);
         } catch (error) {
-            return responseErrors(res, 500, 'Lỗi cập nhật danh mục');
+            responseErrors(res, 500, 'Lỗi cập nhật danh mục');
         }
     }
     async special(_req, res) {

@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+import { default as mongoosePaginate } from 'mongoose-paginate';
 
 const productSchema = new mongoose.Schema(
     {
@@ -30,7 +31,7 @@ const productSchema = new mongoose.Schema(
             default: 0,
         },
         status: {
-            type: ObjectId,
+            type: Number,
             require: true,
         },
         brand: {
@@ -76,4 +77,5 @@ const productSchema = new mongoose.Schema(
         },
     }
 );
+productSchema.plugin(mongoosePaginate);
 export default mongoose.model('products', productSchema);

@@ -11,6 +11,7 @@ export const baseRequest = (validations) => {
             return next();
         }
         const message = errors.array()[0].msg;
+        console.log(errors);
         return responseErrors(res, 401, message);
     };
 };

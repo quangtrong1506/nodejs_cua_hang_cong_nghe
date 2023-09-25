@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { default as mongoosePaginate } from 'mongoose-paginate';
 
 const categorySchema = new mongoose.Schema(
     {
@@ -28,4 +29,5 @@ const categorySchema = new mongoose.Schema(
         },
     }
 );
+categorySchema.plugin(mongoosePaginate);
 export default mongoose.model('categories', categorySchema);

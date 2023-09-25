@@ -1,17 +1,26 @@
 import mongoose from 'mongoose';
-const ratingSchema = new mongoose.Schema(
+import { default as mongoosePaginate } from 'mongoose-paginate';
+
+const chatSchema = new mongoose.Schema(
     {
-        comments: {
+        chat_with_admin: {
+            type: Boolean,
+            default: true,
+        },
+        members: {
             type: Array,
+            require: true,
             default: [],
         },
         created_at: {
             type: Date,
             required: false,
+            timestamps: true,
         },
         updated_at: {
             type: Date,
             required: false,
+            timestamps: true,
         },
     },
     {
@@ -21,4 +30,5 @@ const ratingSchema = new mongoose.Schema(
         },
     }
 );
-export default mongoose.model('rating', ratingSchema);
+chatSchema.plugin(mongoosePaginate);
+export default mongoose.model('chats', chatSchema);

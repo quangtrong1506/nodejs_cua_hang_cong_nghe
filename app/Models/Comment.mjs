@@ -1,8 +1,15 @@
-import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
+import { default as mongoosePaginate } from 'mongoose-paginate';
 
 const commentSchema = new mongoose.Schema(
     {
+        post_id: {
+            type: ObjectId,
+        },
+        product_id: {
+            type: ObjectId,
+        },
         user_id: {
             type: ObjectId,
             required: true,
@@ -31,4 +38,5 @@ const commentSchema = new mongoose.Schema(
         },
     }
 );
+commentSchema.plugin(mongoosePaginate);
 export default mongoose.model('comments', commentSchema);

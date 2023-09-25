@@ -1,7 +1,5 @@
-import { stringToSlug } from '../../Common/helper.mjs';
-import CategoryRepository from '../../Repositories/CategoryRepository.mjs';
 import { baseRequest } from './BaseRequest.mjs';
-import { body, param } from 'express-validator';
+import { body } from 'express-validator';
 
 const validationAddProduct = [
     body('title').custom(async (title) => {
@@ -32,31 +30,5 @@ const validationAddProduct = [
         if (!images) throw new Error('Ảnh sản phẩm không được để trống');
     }),
 ];
-const validationUpdateCategory = [
-    param('slug').custom(async (slug) => {
-        const checkOld = await CategoryRepository.findBy({
-            slug,
-        });
-        if (checkOld.length === 0) throw new Error('Danh mục không tồn tại');
-    }),
-    body('name').custom(async (name) => {
-        if (!name) throw new Error('Tên danh mục không được để trống');
-        const checkNew = await CategoryRepository.findBy({
-            slug: stringToSlug(name),
-        });
-        if (checkNew.length > 0) throw new Error('Tên danh mục mới đã tồn tại');
-    }),
-];
-
-const validationDestroyCategory = [
-    param('slug').custom(async (slug) => {
-        const checkOld = await CategoryRepository.findBy({
-            slug,
-        });
-        if (checkOld.length === 0) throw new Error('Danh mục không tồn tại');
-    }),
-];
 
 export const validateAddProduct = baseRequest(validationAddProduct);
-export const validateUpdateCategory = baseRequest(validationUpdateCategory);
-export const validateDestroyCategory = baseRequest(validationDestroyCategory);

@@ -33,6 +33,7 @@
         "mongoose-paginate": "^5.0.3",
         "multer": "^1.4.5-lts.1",
         "nodemailer": "^6.9.1",
+        "socket.io": "^4.7.2",
         "winston": "^3.8.2",
         "xlsx": "^0.18.5"
     },
@@ -40,8 +41,7 @@
         "eslint": "^8.0.0",
         "husky": "^7.0.2",
         "lint-staged": "^11.2.3",
-        "nodemon": "^2.0.12",
-        "prettier": "^2.4.1"
+        "nodemon": "^2.0.12"
     },
     "husky": {
         "hooks": {
@@ -50,7 +50,6 @@
     },
     "lint-staged": {
         "*.js": [
-            "prettier --single-quote --write",
             "eslint --fix"
         ]
     }

@@ -1,48 +1,42 @@
-import BaseController from './BaseController.mjs';
 import {
     hashHmacString,
-    parserJWTToken,
     responseErrors,
     responseSuccess,
+    sendUserNotification,
 } from '../../Common/helper.mjs';
 import UserRepository from '../../Repositories/UserRepository.mjs';
-import * as fs from 'fs';
-import { STORAGE_PATHS, USERS } from '../../../config/common.mjs';
-import winston from 'winston';
+import BaseController from './BaseController.mjs';
 
 class ProfileController extends BaseController {
-    show(req, res) {
+    show(_req, res) {
         const user = res.locals.authUser;
-
-        if (user.avatar) {
-            try {
-                user.avatar = JSON.stringify({
-                    mimeType: user.avatar.split('.').pop(),
-                    value: fs.readFileSync(user.avatar),
-                });
-            } catch (e) {
-                winston.loggers.get('system').error('ERROR', e);
-            }
-        }
-
         return responseSuccess(res, user);
     }
 
-    update(req, res) {
+    async update(req, res) {
         try {
             const data = {
                 name: req.body.name,
+                avatar: req.body.avatar,
+                address: req.body.address,
+                phone: req.body.phone,
             };
 
-            if (req.file) {
-                data.avatar =
-                    STORAGE_PATHS.uploadAvatarUser + req.file.filename;
-            }
-            UserRepository.update(res.locals.authUser._id, data).then(
-                (response) => {
-                    return responseSuccess(res, true);
-                }
+            const user = await UserRepository.update(
+                res.locals.authUser._id,
+                data
             );
+            responseSuccess(res, {
+                ...user._doc,
+                name: req.body.name,
+                avatar: req.body.avatar ?? user.avatar,
+                address: req.body.address,
+                phone: req.body.phone,
+            });
+            await sendUserNotification(res.locals.authUser._id, {
+                title: 'Cập nhật thông tin thành công!',
+                content: '',
+            });
         } catch (e) {
             return responseErrors(res, 400, e.message);
         }

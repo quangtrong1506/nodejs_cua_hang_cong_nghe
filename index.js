@@ -1,37 +1,49 @@
-import express from 'express';
-import cors from 'cors';
-import './loadEnvironment.mjs';
-import 'express-async-errors';
-import api from './routes/api.mjs';
-import bodyParser from 'body-parser';
-// import { logging } from './config/logging.mjs';
-// import winston from 'winston';
-import db from './config/database.mjs';
-import fileupload from 'express-fileupload';
-
-// logging();
-// connect db
-db.connect()
-    .then(() => console.log('Connected!'))
-    .catch((e) => console.log(e));
 const PORT = process.env.PORT || 5050;
 const app = express();
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import express from 'express';
+import 'express-async-errors';
+import fileupload from 'express-fileupload';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import IndexController from './app/Http/Controllers/IndexController.mjs';
+import SocketServerHandler from './app/Socket/SocketServerHandler.js';
+import db from './config/database.mjs';
+import './loadEnvironment.mjs';
+import router from './routes/index.js';
+
+// connect db
+db.connect();
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileupload());
 // Load routes
-app.use('/', api);
+app.all('/', IndexController.index);
+router(app);
+app.all('*', IndexController.error);
 
-// Set view engine
 // Global error handling
-app.use((err, _req, res) => {
-    // winston.loggers.get('system').error('ERROR', err);
-    // res.status(500).send(err);
+app.use((err, _req, res, _next) => {
+    res.json({
+        status_code: 500,
+        message: err.message,
+    });
 });
+// socket io
+const httpServer = createServer(app);
+// handle socket
+const socketIOServer = new Server(httpServer, {
+    cors: {
+        origin: [process.env.SOCKET_IO_CLIENT, process.env.SOCKET_IO_ADMIN_CLIENT],
+    },
+});
+const socketServerHandler = new SocketServerHandler();
+socketServerHandler.handle();
+export { socketIOServer, socketServerHandler };
 
-// start the Express server
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });

@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
-import { ObjectId } from "mongodb";
-import { USERS } from "../../config/common.mjs";
-import { default as mongoosePaginate } from "mongoose-paginate";
+import mongoose from 'mongoose';
+import { default as mongoosePaginate } from 'mongoose-paginate';
 
 const userSchema = new mongoose.Schema(
     {
@@ -18,13 +16,25 @@ const userSchema = new mongoose.Schema(
         },
         phone: {
             type: String,
-            required: [true, 'Số điện thoại không được để trống'],
-            unique: [true, 'Số điện thoại đã tồn tại'],
-            maxLength: [11, 'Số điện thoại không được lớn hơn {MAXLENGTH} ký tự'],
-            minLength: [10, 'Số điện thoại không được ít hơn {MINLENGTH} ký tự'],
+            maxLength: [
+                11,
+                'Số điện thoại không được lớn hơn {MAXLENGTH} ký tự',
+            ],
+            minLength: [
+                10,
+                'Số điện thoại không được ít hơn {MINLENGTH} ký tự',
+            ],
         },
         avatar: {
             type: String,
+            default: '/images/default_avatar.png',
+        },
+        address: {
+            type: String,
+        },
+        status: {
+            type: Number,
+            default: 1,
         },
         password: {
             type: String,
@@ -32,51 +42,22 @@ const userSchema = new mongoose.Schema(
             maxLength: [255, 'Mật khẩu không được lớn hơn {MAXLENGTH} ký tự'],
             minLength: [6, 'Mật khẩu không được ít hơn {MINLENGTH} ký tự'],
         },
-        level: {
-            type: Number,
-            required: true,
-            enum: {
-                values: Object.values(USERS.level),
-                message: 'Giá trị đã chọn trong trường phân quyền không hợp lệ.'
-            },
-            default: USERS.level.user
-        },
-        is_confirm_account: {
-            type: Number,
-            required: true,
-            enum: {
-                values: Object.values(USERS.is_confirm_account),
-            },
-            default: USERS.is_confirm_account.false
-        },
-        created_by: {
-            type: ObjectId,
-            required: false,
-        },
-        updated_by: {
-            type: ObjectId,
-            required: false,
-        },
         created_at: {
             type: Date,
             required: false,
-            timestamps: true
+            timestamps: true,
         },
         updated_at: {
             type: Date,
             required: false,
-            timestamps: true
-        },
-        deleted_at: {
-            type: Date,
-            required: false
+            timestamps: true,
         },
     },
     {
         timestamps: {
             createdAt: 'created_at',
-            updatedAt: 'updated_at'
-        }
+            updatedAt: 'updated_at',
+        },
     }
 );
 userSchema.plugin(mongoosePaginate);

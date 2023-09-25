@@ -10,7 +10,6 @@ export const authMiddleware = async (req, res, next) => {
     try {
         const userId = responseToken.payload.id;
         const user = await UserRepository.findById(userId);
-
         if (!user) {
             return responseErrors(res, 401, 'User không tồn tại.');
         }

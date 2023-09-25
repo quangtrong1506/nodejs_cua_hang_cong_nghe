@@ -1,5 +1,7 @@
 import crypto from 'crypto';
 import moment from 'moment';
+import { socketServerHandler } from '../../index.js';
+import NotificationRepository from '../Repositories/NotificationRepository.mjs';
 export const hashHmacString = (string, algorithm = 'sha1') => {
     return crypto
         .createHmac(algorithm, process.env.PRIVATE_KEY)
@@ -92,40 +94,16 @@ export const responseSuccess = (
     });
 };
 
-export const responseErrors = (res, statusCode = 500, errors) => {
-    let dataErrors = {};
-    let message = '';
-
-    if (typeof errors === 'object') {
-        message = errors.message ?? '';
-        dataErrors = Object.values(errors.errors).map((error) => {
-            let message = '';
-
-            if (error?.message) {
-                message = error.message;
-            }
-
-            if (error?.msg) {
-                message = error.msg;
-            }
-
-            return {
-                [error.path]: {
-                    value: error.value,
-                    message,
-                },
-            };
-        });
+export const responseErrors = (res, statusCode = 500, message, errors) => {
+    if (Array.isArray(message)) {
+        const [key, value] = (message = Object.entries(message[0])[0]);
+        message = key + ' ' + value;
+        errors = message;
     }
-
-    if (typeof errors === 'string') {
-        message = errors;
-    }
-
     return res.status(statusCode).json({
         now: new Date(),
         status_code: statusCode,
-        errors: dataErrors,
+        errors: errors,
         message: message,
     });
 };
@@ -139,7 +117,7 @@ export const generateConfirmUrl = (userId) => {
 
     return process.env.FE_DOMAIN + 'confirm-account?token=' + token;
 };
-export const stringToSlug = (str) => {
+export const stringToSlug = (str = '') => {
     // remove accents
     var from =
             'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñçýỳỹỵỷ',
@@ -148,7 +126,6 @@ export const stringToSlug = (str) => {
     for (var i = 0, l = from.length; i < l; i++) {
         str = str.replace(RegExp(from[i], 'gi'), to[i]);
     }
-
     str = str
         .toLowerCase()
         .trim()
@@ -160,7 +137,7 @@ export const stringToSlug = (str) => {
 export const mongooseSlugGenerator = async (Repository, str) => {
     const data = await Repository.findBy({ slug: stringToSlug(str) });
     if (data.length === 0) return stringToSlug(str);
-    else return stringToSlug(str);
+    else return stringToSlug(str + '-' + getID());
 };
 
 export const getID = (length) => {
@@ -176,18 +153,48 @@ export const getProductSortOption = (sort) => {
     const option = {};
     switch (sort) {
         case 1:
-            option.price = 1;
-            break;
-        case 2:
-            option.price = -1;
-            break;
-        case 3:
             option.title = 1;
             break;
-        case 4:
+        case 2:
             option.title = -1;
             break;
+        case 3:
+            option.price = 1;
+            break;
+        case 4:
+            option.price = -1;
+            break;
+
         default:
     }
     return option;
+};
+export const numberToVndString = (number) => {
+    if (typeof number !== 'number') number = 0;
+    return number.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    });
+};
+
+export const getDefaultSort = (sort) => {
+    const options = {};
+    if (sort == 0 || sort == 1) options.created_at = -1;
+    else if (sort == 2) options.created_at = 1;
+    return options;
+};
+export const sendUserNotification = (userId, { title, content }) => {
+    return new Promise(async (resolve, rejects) => {
+        const notification = await NotificationRepository.store({
+            user_id: userId,
+            title,
+            content,
+        });
+        socketServerHandler.notificationNamespace.sendNotification({
+            userId: userId,
+            notification,
+        });
+        resolve();
+        rejects();
+    });
 };
