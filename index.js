@@ -46,6 +46,8 @@ const socketIOServer = new Server(httpServer, {
 const socketServerHandler = new SocketServerHandler();
 socketServerHandler.handle();
 export { socketIOServer, socketServerHandler };
+
+//Start server
 httpServer.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
