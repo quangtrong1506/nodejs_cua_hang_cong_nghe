@@ -30,6 +30,7 @@ class AuthController extends BaseController {
                 user_token: generateJWTToken(user[0].id),
             });
         } catch (e) {
+            console.log(e);
             return responseErrors(res, 500, e.message, []);
         }
     }
