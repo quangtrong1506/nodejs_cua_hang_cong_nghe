@@ -37,13 +37,15 @@ const httpServer = createServer(app);
 // handle socket
 const socketIOServer = new Server(httpServer, {
     cors: {
-        origin: [process.env.SOCKET_IO_CLIENT, process.env.SOCKET_IO_ADMIN_CLIENT],
+        origin: [
+            process.env.SOCKET_IO_CLIENT,
+            process.env.SOCKET_IO_ADMIN_CLIENT,
+        ],
     },
 });
 const socketServerHandler = new SocketServerHandler();
 socketServerHandler.handle();
 export { socketIOServer, socketServerHandler };
-
 httpServer.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
