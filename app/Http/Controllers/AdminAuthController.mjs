@@ -1,5 +1,4 @@
-import BaseController from './BaseController.mjs';
-import AdminRepository from '../../Repositories/AdminRepository.mjs';
+import { USERS } from '../../../config/common.mjs';
 import {
     generateJWTToken,
     hashHmacString,
@@ -7,7 +6,8 @@ import {
     responseErrors,
     responseSuccess,
 } from '../../Common/helper.mjs';
-import { USERS, Admin } from '../../../config/common.mjs';
+import AdminRepository from '../../Repositories/AdminRepository.mjs';
+import BaseController from './BaseController.mjs';
 class AdminAuthController extends BaseController {
     async login(req, res) {
         try {
@@ -24,6 +24,7 @@ class AdminAuthController extends BaseController {
                 token: generateJWTToken(user[0].id),
             });
         } catch (e) {
+            console.log(e);
             return responseErrors(res, 500, e.message);
         }
     }
