@@ -8,6 +8,7 @@ import giftRouter from './slice/gift.js';
 import messageRouter from './slice/message.js';
 import notificationRouter from './slice/notifiaction.js';
 import orderRouter from './slice/order.js';
+import postsRouter from './slice/post.js';
 import productRouter from './slice/product.js';
 import profileRouter from './slice/profile.js';
 import userRouter from './slice/user.js';
@@ -22,6 +23,7 @@ const router = (app) => {
     messageRouter(app);
     notificationRouter(app);
     orderRouter(app);
+    postsRouter(app);
     productRouter(app);
     profileRouter(app);
     userRouter(app);

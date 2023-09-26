@@ -19,10 +19,9 @@ class CategoryController extends BaseController {
             const sort = parseInt(req.query.sort) || 0;
             const limit = req.query.limit || 20;
             const sortOption = getProductSortOption(sort);
-            const options = { ...sortOption, limit, page };
+            const options = { sort: sortOption, limit, page };
             let CATS = [];
             let BRANDS = [];
-
             await Promise.all([
                 CategoryRepository.findBy({}),
                 BrandRepository.findBy({}),
