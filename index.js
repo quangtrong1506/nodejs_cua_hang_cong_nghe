@@ -33,21 +33,21 @@ app.use((err, _req, res, _next) => {
     });
 });
 // socket io
-const httpServer = createServer(app);
-// handle socket
-const socketIOServer = new Server(httpServer, {
-    cors: {
-        origin: [
-            process.env.SOCKET_IO_CLIENT,
-            process.env.SOCKET_IO_ADMIN_CLIENT,
-        ],
-    },
-});
-const socketServerHandler = new SocketServerHandler();
-socketServerHandler.handle();
-export { socketIOServer, socketServerHandler };
+// const httpServer = createServer(app);
+// // handle socket
+// const socketIOServer = new Server(httpServer, {
+//     cors: {
+//         origin: [
+//             process.env.SOCKET_IO_CLIENT,
+//             process.env.SOCKET_IO_ADMIN_CLIENT,
+//         ],
+//     },
+// });
+// const socketServerHandler = new SocketServerHandler();
+// socketServerHandler.handle();
+// export { socketIOServer, socketServerHandler };
 
 //Start server
-httpServer.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });

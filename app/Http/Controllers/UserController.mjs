@@ -1,7 +1,7 @@
 import {
     responseErrors,
     responseSuccess,
-    sendUserNotification,
+    // sendUserNotification,
 } from '../../Common/helper.mjs';
 import UserRepository from '../../Repositories/UserRepository.mjs';
 import BaseController from './BaseController.mjs';
@@ -33,10 +33,7 @@ class UserController extends BaseController {
                 phone: req.body.phone,
             };
 
-            const user = await UserRepository.update(
-                res.locals.authUser._id,
-                data
-            );
+            const user = await UserRepository.update(res.locals.authUser._id, data);
             responseSuccess(res, user);
         } catch (e) {
             return responseErrors(res, 400, e.message);

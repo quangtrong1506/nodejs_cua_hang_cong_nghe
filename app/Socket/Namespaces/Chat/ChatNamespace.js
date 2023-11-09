@@ -1,4 +1,4 @@
-import { socketIOServer } from '../../../../index.js';
+// import { socketIOServer } from '../../../../index.js';
 import UserRepository from '../../../Repositories/UserRepository.mjs';
 import { handleUserMessage } from '../../helpers/helpers.js';
 import AdminNamespace from '../Admin/AdminNamespace.js';
@@ -23,9 +23,7 @@ class UserChatNamespace extends BaseNamespace {
                 });
             });
             socket.on('chat_with_user', async ({ userId, message }) => {
-                const users = this.users.filter(
-                    (user) => user.userId == userId
-                );
+                const users = this.users.filter((user) => user.userId == userId);
                 users.forEach((user) => {
                     socket.to(user.socketId).emit('get_chat', { message });
                 });
@@ -34,9 +32,7 @@ class UserChatNamespace extends BaseNamespace {
                 this.users.push({ userId, socketId: socket.id });
             });
             socket.on('disconnect', () => {
-                const index = this.users.findIndex(
-                    (user) => user.socketId === socket.id
-                );
+                const index = this.users.findIndex((user) => user.socketId === socket.id);
                 if (index !== -1) this.users.splice(index, 1);
             });
         });
@@ -45,10 +41,7 @@ class UserChatNamespace extends BaseNamespace {
         console.log(this.users, userId);
         const users = this.users.filter((user) => user.userId == userId);
         users.forEach((user) => {
-            socketIOServer
-                .of(this.namespace)
-                .to(user.socketId)
-                .emit('get_chat', { message });
+            socketIOServer.of(this.namespace).to(user.socketId).emit('get_chat', { message });
         });
     }
 }

@@ -1,4 +1,4 @@
-import { socketIOServer } from '../../../../index.js';
+// import { socketIOServer } from '../../../../index.js';
 import BaseNamespace from '../BaseNamespace.js';
 class NotificationNamespace extends BaseNamespace {
     constructor() {
@@ -11,9 +11,7 @@ class NotificationNamespace extends BaseNamespace {
                 this.users.push({ userId, socketId: socket.id });
             });
             socket.on('disconnect', () => {
-                const index = this.users.findIndex(
-                    (user) => user.socketId === socket.id
-                );
+                const index = this.users.findIndex((user) => user.socketId === socket.id);
                 if (index !== -1) this.users.splice(index, 1);
             });
         });
@@ -27,8 +25,7 @@ class NotificationNamespace extends BaseNamespace {
                 .emit('get_new_notification', {
                     title: notification.title || 'Thông báo mới',
                     content: notification.content || '',
-                    created_at:
-                        notification.created_at || new Date().toISOString(),
+                    created_at: notification.created_at || new Date().toISOString(),
                 });
         });
     }

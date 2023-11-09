@@ -5,7 +5,7 @@ import {
     parserJWTToken,
     responseErrors,
     responseSuccess,
-    sendUserNotification,
+    // sendUserNotification,
 } from '../../Common/helper.mjs';
 import NotificationRepository from '../../Repositories/NotificationRepository.mjs';
 import UserRepository from '../../Repositories/UserRepository.mjs';
@@ -41,12 +41,9 @@ class AuthController extends BaseController {
             const password = hashHmacString(params.password);
             const confirm = hashHmacString(params.confirm);
             if (confirm != password)
-                return responseErrors(
-                    res,
-                    401,
-                    'Xác nhận mật khẩu không chính xác',
-                    [{ confirm: 'Xác nhận mật khẩu không chính xác' }]
-                );
+                return responseErrors(res, 401, 'Xác nhận mật khẩu không chính xác', [
+                    { confirm: 'Xác nhận mật khẩu không chính xác' },
+                ]);
             const index = await UserRepository.count();
             const old = await UserRepository.findBy({ email: params.email });
             if (old.length > 0)
@@ -109,12 +106,9 @@ class AuthController extends BaseController {
                     { password: 'Mật khẩu không chính xác' },
                 ]);
             if (req.body.newPassword != req.body.confirm)
-                return responseErrors(
-                    res,
-                    401,
-                    'Xác nhận mật khẩu không chính xác',
-                    [{ confirm: 'Xác nhận mật khẩu không chính xác' }]
-                );
+                return responseErrors(res, 401, 'Xác nhận mật khẩu không chính xác', [
+                    { confirm: 'Xác nhận mật khẩu không chính xác' },
+                ]);
             const userUpdated = await UserRepository.update(user._id, {
                 password: hashHmacString(req.body.newPassword),
             });

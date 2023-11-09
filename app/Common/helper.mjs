@@ -1,12 +1,9 @@
 import crypto from 'crypto';
 import moment from 'moment';
-import { socketServerHandler } from '../../index.js';
-import NotificationRepository from '../Repositories/NotificationRepository.mjs';
+// import { socketServerHandler } from '../../index.js';
+// import NotificationRepository from '../Repositories/NotificationRepository.mjs';
 export const hashHmacString = (string, algorithm = 'sha1') => {
-    return crypto
-        .createHmac(algorithm, process.env.PRIVATE_KEY)
-        .update(string)
-        .digest('hex');
+    return crypto.createHmac(algorithm, process.env.PRIVATE_KEY).update(string).digest('hex');
 };
 
 export const generateJWTToken = (
@@ -23,10 +20,7 @@ export const generateJWTToken = (
         iat: moment().unix(),
         exp: exp,
     });
-    const base64Header = Buffer.from(header)
-        .toString('base64')
-        .replace('==', '')
-        .replace('=', '');
+    const base64Header = Buffer.from(header).toString('base64').replace('==', '').replace('=', '');
     const base64Payload = Buffer.from(payload)
         .toString('base64')
         .replace('==', '')
@@ -56,19 +50,12 @@ export const parserJWTToken = (bearerToken, withBearerPrefix = true) => {
         const base64Header = token[0];
         const base64Payload = token[1];
         const signature = token[2];
-        const header = JSON.parse(
-            Buffer.from(base64Header, 'base64').toString()
-        );
+        const header = JSON.parse(Buffer.from(base64Header, 'base64').toString());
 
-        if (
-            hashHmacString(base64Header + '.' + base64Payload, header.alg) !==
-            signature
-        ) {
+        if (hashHmacString(base64Header + '.' + base64Payload, header.alg) !== signature) {
             return { ...responseToken, errors: 'Token không đúng định dạng!' };
         }
-        const payload = JSON.parse(
-            Buffer.from(base64Payload, 'base64').toString()
-        );
+        const payload = JSON.parse(Buffer.from(base64Payload, 'base64').toString());
 
         if (moment().unix() > payload.exp) {
             return { ...responseToken, errors: 'Token đã hết hạn!' };
@@ -80,12 +67,7 @@ export const parserJWTToken = (bearerToken, withBearerPrefix = true) => {
     }
 };
 
-export const responseSuccess = (
-    res,
-    data,
-    statusCode = 200,
-    message = 'Thành công'
-) => {
+export const responseSuccess = (res, data, statusCode = 200, message = 'Thành công') => {
     return res.status(statusCode).json({
         now: new Date(),
         status_code: statusCode,
@@ -109,20 +91,14 @@ export const responseErrors = (res, statusCode = 500, message, errors) => {
 };
 
 export const generateConfirmUrl = (userId) => {
-    const token = generateJWTToken(
-        userId,
-        'sha1',
-        moment().add(1, 'days').unix()
-    );
+    const token = generateJWTToken(userId, 'sha1', moment().add(1, 'days').unix());
 
     return process.env.FE_DOMAIN + 'confirm-account?token=' + token;
 };
 export const stringToSlug = (str = '') => {
     // remove accents
-    var from =
-            'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñçýỳỹỵỷ',
-        to =
-            'aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouuncyyyyy';
+    var from = 'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñçýỳỹỵỷ',
+        to = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouuncyyyyy';
     for (var i = 0, l = from.length; i < l; i++) {
         str = str.replace(RegExp(from[i], 'gi'), to[i]);
     }
@@ -183,18 +159,18 @@ export const getDefaultSort = (sort) => {
     else if (sort == 2) options.created_at = 1;
     return options;
 };
-export const sendUserNotification = (userId, { title, content }) => {
-    return new Promise(async (resolve, rejects) => {
-        const notification = await NotificationRepository.store({
-            user_id: userId,
-            title,
-            content,
-        });
-        socketServerHandler.notificationNamespace.sendNotification({
-            userId: userId,
-            notification,
-        });
-        resolve();
-        rejects();
-    });
-};
+// export const sendUserNotification = (userId, { title, content }) => {
+//     return new Promise(async (resolve, rejects) => {
+//         const notification = await NotificationRepository.store({
+//             user_id: userId,
+//             title,
+//             content,
+//         });
+//         socketServerHandler.notificationNamespace.sendNotification({
+//             userId: userId,
+//             notification,
+//         });
+//         resolve();
+//         rejects();
+//     });
+// };

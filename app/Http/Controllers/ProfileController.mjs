@@ -2,7 +2,7 @@ import {
     hashHmacString,
     responseErrors,
     responseSuccess,
-    sendUserNotification,
+    // sendUserNotification,
 } from '../../Common/helper.mjs';
 import UserRepository from '../../Repositories/UserRepository.mjs';
 import BaseController from './BaseController.mjs';
@@ -22,10 +22,7 @@ class ProfileController extends BaseController {
                 phone: req.body.phone,
             };
 
-            const user = await UserRepository.update(
-                res.locals.authUser._id,
-                data
-            );
+            const user = await UserRepository.update(res.locals.authUser._id, data);
             responseSuccess(res, {
                 ...user._doc,
                 name: req.body.name,
@@ -44,12 +41,9 @@ class ProfileController extends BaseController {
 
     async changePassword(req, res) {
         try {
-            const userUpdated = await UserRepository.update(
-                res.locals.authUser._id,
-                {
-                    password: hashHmacString(req.body.password),
-                }
-            );
+            const userUpdated = await UserRepository.update(res.locals.authUser._id, {
+                password: hashHmacString(req.body.password),
+            });
 
             return responseSuccess(res, userUpdated);
         } catch (e) {

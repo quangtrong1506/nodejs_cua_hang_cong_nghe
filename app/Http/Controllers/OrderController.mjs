@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import {
     responseErrors,
     responseSuccess,
-    sendUserNotification,
+    // sendUserNotification,
 } from '../../Common/helper.mjs';
 import GiftCodeRepository from '../../Repositories/GiftCodeRepository.mjs';
 import OrderRepository from '../../Repositories/OrderCodeRepository.mjs';
@@ -52,32 +52,20 @@ class OrderController extends BaseController {
             const total = data.products.reduce((sum, prod) => {
                 return (
                     sum +
-                    (prod.price -
-                        (prod.price * prod.discount_percentage) / 100) *
-                        prod.quantity
+                    (prod.price - (prod.price * prod.discount_percentage) / 100) * prod.quantity
                 );
             }, 0);
             if (gift) {
-                if (
-                    gift.status.user_used?.find(
-                        (id) => id.toString() === data.user_id
-                    )
-                )
-                    responseErrors(res, 500, [
-                        { gift_code: 'Đã được sử dụng' },
-                    ]);
+                if (gift.status.user_used?.find((id) => id.toString() === data.user_id))
+                    responseErrors(res, 500, [{ gift_code: 'Đã được sử dụng' }]);
                 if (gift.status.type === 1 && gift.status.user_id !== user_id)
                     responseErrors(res, 500, [{ gift_code: 'Không hợp lệ' }]);
 
                 if (gift.status.type === 0 && total >= gift.status.min_price)
                     discount = gift.discount.value;
-                else if (
-                    gift.status.type === 1 &&
-                    total >= gift.status.min_price
-                ) {
+                else if (gift.status.type === 1 && total >= gift.status.min_price) {
                     discount = gift.discount.percent * total;
-                    if (discount > gift.status.max_discount)
-                        discount = gift.status.max_discount;
+                    if (discount > gift.status.max_discount) discount = gift.status.max_discount;
                 }
             }
             data.payment.discount = discount;
@@ -124,8 +112,7 @@ class OrderController extends BaseController {
             if (!mongoose.isValidObjectId(id))
                 return responseErrors(res, 404, 'Đơn hàng không tồn tại');
             const order = await OrderRepository.findById(id);
-            if (!order)
-                return responseErrors(res, 404, 'Đơn hàng không tồn tại');
+            if (!order) return responseErrors(res, 404, 'Đơn hàng không tồn tại');
             const data = { ...order._doc, id: order._id };
             delete data._id;
             responseSuccess(res, data);
@@ -145,8 +132,7 @@ class OrderController extends BaseController {
                     message: data.message ?? 'Lý do khác',
                 },
             });
-            if (!order)
-                return responseErrors(res, 404, 'Đơn hàng không tồn tại');
+            if (!order) return responseErrors(res, 404, 'Đơn hàng không tồn tại');
             await sendUserNotification(res.locals.authUser._id, {
                 title: 'Huỷ đơn hàng thành công!',
                 content: 'Mã đơn hàng của bạn: ' + order._id,
