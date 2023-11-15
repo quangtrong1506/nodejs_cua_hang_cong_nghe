@@ -1,9 +1,5 @@
 import mongoose from 'mongoose';
-import {
-    mongooseSlugGenerator,
-    responseErrors,
-    responseSuccess,
-} from '../../Common/helper.mjs';
+import { mongooseSlugGenerator, responseErrors, responseSuccess } from '../../Common/helper.mjs';
 import PostRepository from '../../Repositories/PostRepository.mjs';
 import BaseController from './BaseController.mjs';
 
@@ -52,9 +48,9 @@ class PostsController extends BaseController {
     async show(req, res) {
         try {
             const { id } = req.params;
+            console.log(id);
             let data = null;
-            if (mongoose.isValidObjectId(id))
-                data = await PostRepository.findById(id);
+            if (mongoose.isValidObjectId(id)) data = await PostRepository.findById(id);
             else data = await PostRepository.findOne({ slug: id });
             if (!data) responseErrors(res, 404, 'Bài viết không tồn tại');
             responseSuccess(res, data);

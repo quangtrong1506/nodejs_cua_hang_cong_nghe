@@ -16,14 +16,7 @@ const userSchema = new mongoose.Schema(
         },
         phone: {
             type: String,
-            maxLength: [
-                11,
-                'Số điện thoại không được lớn hơn {MAXLENGTH} ký tự',
-            ],
-            minLength: [
-                10,
-                'Số điện thoại không được ít hơn {MINLENGTH} ký tự',
-            ],
+            default: '',
         },
         avatar: {
             type: String,
